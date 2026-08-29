@@ -83,7 +83,7 @@ Slug-i modeli sprawdzisz na: https://openrouter.ai/models
 
 ## Frontend na GitHub Pages
 
-`docs/` zawiera statyczny UI: wpisz pomysł (tekst lub plik .md), wklej fine-grained
+**Strona: https://matkowpa.github.io/idea-orch/** — wpisz pomysł (tekst lub plik .md), wklej fine-grained
 PAT (Contents RW + Actions W na to repo; trzymany w sessionStorage), kliknij
 **Uruchom debatę** — frontend zapisze `queue/<slug>.md`, odpali workflow
 `run-boardroom` (GitHub Action z Secret `OPENROUTER_API_KEY`) i wyświetli
