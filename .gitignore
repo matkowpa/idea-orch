@@ -2,4 +2,6 @@ __pycache__/
 *.pyc
 sessions/
 pricing_cache.json
+TODOs.txt
+.claude/settings.json
 .env
