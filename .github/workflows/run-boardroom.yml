@@ -26,7 +26,7 @@ jobs:
         env:
           SLUG: ${{ inputs.slug }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG"
+        run: python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG" --config config.flash.yaml
 
       - name: Commit results
         env:
