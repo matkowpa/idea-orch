@@ -47,6 +47,8 @@ Repo zawiera:
 
 Instalacja globalna: skopiuj pliki do `~/.claude/skills/boardroom/` i
 `~/.claude/commands/` (na tej maszynie kopie już tam są).
+Dla autouzupełniania `/idea-orch` w Cline: skopiuj
+`.clinerules/workflows/idea-orch.md` do projektu, w którym chcesz go używać.
 Wymagany klucz: `OPENROUTER_API_KEY`.
 
 ## Przepływ
