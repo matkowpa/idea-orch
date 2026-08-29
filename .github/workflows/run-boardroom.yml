@@ -27,6 +27,8 @@ jobs:
           SLUG: ${{ inputs.slug }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
+          git config user.name "boardroom-bot"
+          git config user.email "actions@github.com"
           python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG" &
           PID=$!
           while kill -0 $PID 2>/dev/null; do
