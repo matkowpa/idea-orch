@@ -2,7 +2,8 @@ session:
   rounds: 2                    # maksymalna liczba rund debaty
   max_discussion_chars: 6000   # limit kontekstu opinii wstrzykiwanych agentom
   temperature: 0.7
-  max_tokens: 2000
+  reasoning_effort: low       # modele reasoning (GLM): ogranicz budżet rozumowania
+  max_tokens: 4000
 
 models:
   glm:    "openrouter/z-ai/glm-5.3"                 # tańszy model — rola Sceptyka

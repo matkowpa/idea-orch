@@ -17,8 +17,9 @@ CALLS = []
 counts = {}
 
 
-async def fake_acompletion(model, messages, temperature, max_tokens):
+async def fake_acompletion(**kwargs):
     """Zwraca kontrolowane odpowiedzi dla każdej roli agenta."""
+    messages = kwargs["messages"]
     system = messages[0]["content"]
     user = messages[1]["content"]
     CALLS.append(system[:20])

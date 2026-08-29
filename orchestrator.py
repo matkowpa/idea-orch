@@ -49,7 +49,7 @@ def write_text(path: Path, content: str) -> None:
 
 async def call_model(model: str, system: str, user: str, log, agent: str,
                      temperature: float, max_tokens: int,
-                     retries: int = 3) -> str:
+                     retries: int = 3, reasoning_effort: str = "") -> str:
     """Jedno wywołanie modelu z retry + logowaniem."""
     messages = [
         {"role": "system", "content": system},
@@ -59,13 +59,14 @@ async def call_model(model: str, system: str, user: str, log, agent: str,
     for attempt in range(1, retries + 1):
         start = time.time()
         try:
-            resp = await litellm.acompletion(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
+            kwargs = dict(model=model, messages=messages,
+                          temperature=temperature, max_tokens=max_tokens)
+            if reasoning_effort:
+                kwargs["reasoning_effort"] = reasoning_effort
+            resp = await litellm.acompletion(**kwargs)
             text = resp.choices[0].message.content or ""
+            if not text.strip():
+                raise ValueError("empty content (reasoning budget wyjedzone?)")
             usage = getattr(resp, "usage", None)
             log.write(json.dumps({
                 "ts": datetime.datetime.now().isoformat(timespec="seconds"),
@@ -115,6 +116,7 @@ class Boardroom:
             user=user, log=self.log, agent=agent,
             temperature=self.cfg["session"]["temperature"],
             max_tokens=self.cfg["session"]["max_tokens"],
+            reasoning_effort=self.cfg["session"].get("reasoning_effort", ""),
         )
 
     # ---- etap 1: agenda
