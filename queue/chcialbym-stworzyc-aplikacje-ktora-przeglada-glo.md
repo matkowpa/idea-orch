@@ -1,0 +1,1 @@
+Chciałbym stworzyć aplikację która przegląda główne strony poświecone inwestycjom i na podstawie analizy sentymentu szybko wyłapuje trendy inwestycyjne i zamienia je w rekomendacje dla mnie wyłącznie. Jedna rekomendacja dziennie + wiadomości w ciągu dnia jeśli nadarza się ciekawa okazja
