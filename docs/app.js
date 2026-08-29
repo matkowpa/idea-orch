@@ -52,7 +52,9 @@ async function pollResult(slug, onTick) {
       const pr = await fetch(`https://raw.githubusercontent.com/${REPO}/${BRANCH}/sessions/${slug}/_progress.json?t=` + Date.now());
       if (pr.ok) {
         const j = await pr.json();
-        onTick(`Etap ${j.step}/${j.total}: ${j.stage}${j.detail ? " — " + j.detail : ""}`);
+        const label = `${j.stage}${j.detail ? " — " + j.detail : ""}`;
+        setProgress(j.step, j.total, `Etap ${j.step}/${j.total}: ${label}`);
+        onTick(`Etap ${j.step}/${j.total}: ${label}`);
       }
     } catch (e) { /* progres niedostepny — pomijamy */ }
     const r = await fetch(url + "?t=" + Date.now());
@@ -63,6 +65,14 @@ async function pollResult(slug, onTick) {
 }
 
 function setStatus(msg) { $("status").textContent = msg; }
+
+function setProgress(step, total, label) {
+  const wrap = $("progress-wrap"), bar = $("progress-bar"), lab = $("progress-label");
+  if (step == null) { wrap.hidden = true; lab.hidden = true; return; }
+  wrap.hidden = false; lab.hidden = false;
+  bar.style.width = Math.min(100, Math.round((step / total) * 100)) + "%";
+  lab.textContent = label || ("Etap " + step + "/" + total);
+}
 
 $("file").addEventListener("change", (e) => {
   const f = e.target.files[0];
@@ -85,6 +95,7 @@ $("run").addEventListener("click", async () => {
     setStatus("Zapisuję pomysł do queue/" + slug + ".md ...");
     await putFile("queue/" + slug + ".md", idea, "Pomysł: " + slug, pat);
     setStatus("Uruchamiam workflow ...");
+    setProgress(1, 10, "Start debaty");
     await dispatchRun(slug, pat);
     setStatus("Debata trwa — odpytuję o postęp co 10 s ...");
     const md = await pollResult(slug, () => setStatus("Debata trwa ... odpytuję co 10 s"));
@@ -92,9 +103,11 @@ $("run").addEventListener("click", async () => {
     $("artifacts-link").innerHTML =
       'Pełne artefakty: <a target="_blank" href="https://github.com/' + REPO + '/tree/' + BRANCH + '/sessions/' + slug + '">sessions/' + slug + '</a>';
     $("result-section").hidden = false;
+    setProgress(10, 10, "Gotowe");
     setStatus("Gotowe.");
   } catch (err) {
     setStatus("Błąd: " + err.message);
+    setProgress(null);
   } finally {
     $("run").disabled = false;
   }
