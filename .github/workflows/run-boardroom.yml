@@ -46,9 +46,10 @@ jobs:
         env:
           SLUG: ${{ inputs.slug }}
         run: |
-          git pull --rebase origin main || true
           git config user.name "boardroom-bot"
           git config user.email "actions@github.com"
           git add -f "sessions/$SLUG" || true
-          git commit -m "Boardroom: wynik debaty dla '$SLUG'" || echo "nothing to commit"
-          git push
+          git commit -m "Boardroom: wynik debaty dla '$SLUG'" || true
+          git pull --rebase origin main || true
+          git push || true
+
