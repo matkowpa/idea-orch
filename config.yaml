@@ -5,10 +5,10 @@ session:
   max_tokens: 2000
 
 models:
-  glm:    "zhipu/glm-4-plus"             # tańszy model — rola Sceptyka
-  strong: "anthropic/claude-sonnet-4-5"  # Moderator / Sędzia / Architekt
-  vision: "openai/gpt-4o"                # Visioner
-  mid:    "openai/gpt-4o-mini"           # Analityk
+  glm:    "openrouter/z-ai/glm-4.6"                 # tańszy model — rola Sceptyka
+  strong: "openrouter/anthropic/claude-sonnet-4.5"  # Moderator / Sędzia / Architekt
+  vision: "openrouter/openai/gpt-4o"                # Visioner
+  mid:    "openrouter/openai/gpt-4o-mini"           # Analityk
 
 agents:
   architect:

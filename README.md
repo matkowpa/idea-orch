@@ -10,13 +10,14 @@ debatę o koncepcji biznesowej, a na końcu dostajesz `concept.md` z werdyktem
 pip install -r requirements.txt
 ```
 
-Klucze API jako zmienne środowiskowe (tylko te, których używasz):
+Klucz API (wystarczy jeden — OpenRouter jako agregator):
 
 ```powershell
-$env:ZHIPU_API_KEY     = "..."
-$env:ANTHROPIC_API_KEY = "..."
-$env:OPENAI_API_KEY    = "..."
+$env:OPENROUTER_API_KEY = "sk-or-..."
 ```
+
+Alternatywnie bezpośrednio u providerów: `ZHIPU_API_KEY`, `ANTHROPIC_API_KEY`,
+`OPENAI_API_KEY` (wtedy usuń prefix `openrouter/` z nazw modeli w `config.yaml`).
 
 ## Użycie
 
@@ -55,5 +56,7 @@ prompty etapów: `prompts/*.md` — edytujesz bez dotykania kodu.
 
 ## Uwaga o modelach
 
-Nazwy modeli to przykłady — GLM ustawiasz przez provider `zhipu/...`
-(LiteLLM). Pełna lista providerów: https://docs.litellm.ai/docs/providers
+Modele są ustawione przez OpenRouter (prefix `openrouter/...`, jeden klucz API).
+Dostępne slug-i sprawdzisz na: https://openrouter.ai/models — wystarczy podmienić
+string w `config.yaml`. Pełna lista providerów LiteLLM:
+https://docs.litellm.ai/docs/providers
