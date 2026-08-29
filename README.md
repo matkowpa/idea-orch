@@ -38,6 +38,13 @@ sessions/moj-pomysl/
 └── run.log                # log wywołań: model, tokeny, czas, błędy
 ```
 
+## Użycie jako skill (Claude Code / Cline)
+
+Repo zawiera skill `.claude/skills/boardroom/SKILL.md` — agent uruchomi debatę
+jednym poleceniem z dowolnego folderu roboczego. Instalacja globalna: skopiuj
+plik do `~/.claude/skills/boardroom/SKILL.md` (na tej maszynie kopia już tam jest).
+Wymagany klucz: `OPENROUTER_API_KEY`.
+
 ## Przepływ
 
 1. **Architekt dyskusji** (model mocny) — agenda wątków + pytania do rady.
