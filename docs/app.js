@@ -43,22 +43,26 @@ async function dispatchRun(slug, pat) {
   if (r.status !== 204) throw new Error("Dispatch nie powiódł się: " + r.status + " " + (await r.text()).slice(0, 200));
 }
 
-async function pollResult(slug, onTick) {
+async function pollResult(slug, pat, onTick) {
   const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/sessions/${slug}/concept.md`;
   const deadline = Date.now() + 10 * 60 * 1000; // 10 min
   while (Date.now() < deadline) {
-    // postep debaty (jesli orchestrator juz zaczal)
+    // postep debaty przez GitHub API (bez cache raw; PAT podnosi limit)
     try {
-      const pr = await fetch(`https://raw.githubusercontent.com/${REPO}/${BRANCH}/sessions/${slug}/_progress.json?t=` + Date.now());
+      const pr = await fetch(`https://api.github.com/repos/${REPO}/contents/sessions/${slug}/_progress.json?ref=${BRANCH}&t=` + Date.now(), { headers: headers(pat) });
       if (pr.ok) {
-        const j = await pr.json();
+        const jj = await pr.json();
+        const j = JSON.parse(decodeURIComponent(escape(atob(jj.content.replace(/\s/g, "")))));
         const label = `${j.stage}${j.detail ? " — " + j.detail : ""}`;
         setProgress(j.step, j.total, `Etap ${j.step}/${j.total}: ${label}`);
         onTick(`Etap ${j.step}/${j.total}: ${label}`);
       }
     } catch (e) { /* progres niedostepny — pomijamy */ }
-    const r = await fetch(url + "?t=" + Date.now());
-    if (r.ok) return await r.text();
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/sessions/${slug}/concept.md?ref=${BRANCH}&t=` + Date.now(), { headers: headers(pat) });
+    if (r.ok) {
+      const jj = await r.json();
+      return decodeURIComponent(escape(atob(jj.content.replace(/\s/g, ""))));
+    }
     await new Promise((res) => setTimeout(res, 10000));
   }
   throw new Error("Timeout — sprawdź log Action: https://github.com/" + REPO + "/actions");
@@ -98,7 +102,7 @@ $("run").addEventListener("click", async () => {
     setProgress(1, 10, "Start debaty");
     await dispatchRun(slug, pat);
     setStatus("Debata trwa — odpytuję o postęp co 10 s ...");
-    const md = await pollResult(slug, () => setStatus("Debata trwa ... odpytuję co 10 s"));
+    const md = await pollResult(slug, pat, () => setStatus("Debata trwa ... odpytuję co 10 s"));
     $("result").innerHTML = marked.parse(md);
     $("artifacts-link").innerHTML =
       'Pełne artefakty: <a target="_blank" href="https://github.com/' + REPO + '/tree/' + BRANCH + '/sessions/' + slug + '">sessions/' + slug + '</a>';

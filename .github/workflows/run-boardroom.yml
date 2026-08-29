@@ -22,16 +22,29 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Run boardroom
+      - name: Run boardroom (live progress commits)
         env:
           SLUG: ${{ inputs.slug }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG"
+        run: |
+          python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG" &
+          PID=$!
+          while kill -0 $PID 2>/dev/null; do
+            sleep 20
+            if [ -f "sessions/$SLUG/_progress.json" ]; then
+              git add -f "sessions/$SLUG/_progress.json" 2>/dev/null || true
+              git commit -m "progress: $SLUG" || true
+              git pull --rebase origin main || true
+              git push || true
+            fi
+          done
+          wait $PID
 
       - name: Commit results
         env:
           SLUG: ${{ inputs.slug }}
         run: |
+          git pull --rebase origin main || true
           git config user.name "boardroom-bot"
           git config user.email "actions@github.com"
           git add -f "sessions/$SLUG" || true
