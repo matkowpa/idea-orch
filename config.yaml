@@ -6,7 +6,7 @@ session:
 
 models:
   # szybki profil (frontend GitHub Pages): wszystkie role na GLM flash
-  flash:  "openrouter/z-ai/glm-4.5-flash"
+  flash:  "openrouter/z-ai/glm-5.3-flash"
   # opcja "glebszej" debaty — odkomentuj i przestaw role na strong:
   # strong: "openrouter/anthropic/claude-sonnet-4.5"
 
