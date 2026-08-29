@@ -1,0 +1,10 @@
+{"ts": "2026-08-29T11:41:27", "agent": "architect", "model": "openrouter/anthropic/claude-sonnet-5", "attempt": 1, "duration_s": 18.9, "prompt_tokens": 538, "completion_tokens": 1200, "status": "ok"}
+{"ts": "2026-08-29T11:41:40", "agent": "analyst", "model": "openrouter/openai/gpt-5-mini", "attempt": 1, "duration_s": 13.5, "prompt_tokens": 1115, "completion_tokens": 1472, "status": "ok"}
+{"ts": "2026-08-29T11:41:43", "agent": "sceptic", "model": "openrouter/z-ai/glm-5.3", "attempt": 1, "duration_s": 16.3, "prompt_tokens": 1116, "completion_tokens": 1017, "status": "ok"}
+{"ts": "2026-08-29T11:41:44", "agent": "visionary", "model": "openrouter/openai/gpt-5.1", "attempt": 1, "duration_s": 17.4, "prompt_tokens": 1096, "completion_tokens": 1504, "status": "ok"}
+{"ts": "2026-08-29T11:42:04", "agent": "moderator", "model": "openrouter/anthropic/claude-sonnet-5", "attempt": 1, "duration_s": 19.6, "prompt_tokens": 6475, "completion_tokens": 1359, "status": "ok"}
+{"ts": "2026-08-29T11:42:13", "agent": "analyst", "model": "openrouter/openai/gpt-5-mini", "attempt": 1, "duration_s": 9.8, "prompt_tokens": 3922, "completion_tokens": 1374, "status": "ok"}
+{"ts": "2026-08-29T11:42:17", "agent": "sceptic", "model": "openrouter/z-ai/glm-5.3", "attempt": 1, "duration_s": 13.1, "prompt_tokens": 4019, "completion_tokens": 1284, "status": "ok"}
+{"ts": "2026-08-29T11:42:19", "agent": "visionary", "model": "openrouter/openai/gpt-5.1", "attempt": 1, "duration_s": 15.5, "prompt_tokens": 3903, "completion_tokens": 1453, "status": "ok"}
+{"ts": "2026-08-29T11:42:37", "agent": "moderator", "model": "openrouter/anthropic/claude-sonnet-5", "attempt": 1, "duration_s": 17.6, "prompt_tokens": 6572, "completion_tokens": 1155, "status": "ok"}
+{"ts": "2026-08-29T11:43:10", "agent": "judge", "model": "openrouter/anthropic/claude-sonnet-5", "attempt": 1, "duration_s": 32.8, "prompt_tokens": 15356, "completion_tokens": 2339, "status": "ok"}
