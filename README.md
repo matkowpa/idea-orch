@@ -38,11 +38,15 @@ sessions/moj-pomysl/
 └── run.log                # log wywołań: model, tokeny, czas, błędy
 ```
 
-## Użycie jako skill (Claude Code / Cline)
+## Użycie jako skill / slash command (Claude Code / Cline)
 
-Repo zawiera skill `.claude/skills/boardroom/SKILL.md` — agent uruchomi debatę
-jednym poleceniem z dowolnego folderu roboczego. Instalacja globalna: skopiuj
-plik do `~/.claude/skills/boardroom/SKILL.md` (na tej maszynie kopia już tam jest).
+Repo zawiera:
+- skill `.claude/skills/boardroom/SKILL.md` — agent uruchomi debatę na życzenie,
+- polecenie `/idea-orch` (`.claude/commands/idea-orch.md`) — debata jednym
+  poleceniem z dowolnego folderu roboczego: `/idea-orch ./pomysl/idea.md`.
+
+Instalacja globalna: skopiuj pliki do `~/.claude/skills/boardroom/` i
+`~/.claude/commands/` (na tej maszynie kopie już tam są).
 Wymagany klucz: `OPENROUTER_API_KEY`.
 
 ## Przepływ
