@@ -38,7 +38,7 @@ async function putFile(path, content, message, pat) {
 async function dispatchRun(slug, pat) {
   const r = await fetch(`https://api.github.com/repos/${REPO}/actions/workflows/run-boardroom.yml/dispatches`, {
     method: "POST", headers: { ...headers(pat), "Content-Type": "application/json" },
-    body: JSON.stringify({ ref: BRANCH })
+    body: JSON.stringify({ ref: BRANCH, inputs: { slug } })
   });
   if (r.status !== 204) throw new Error("Dispatch nie powiódł się: " + r.status + " " + (await r.text()).slice(0, 200));
 }
