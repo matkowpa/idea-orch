@@ -62,7 +62,9 @@ async def call_model(model: str, system: str, user: str, log, agent: str,
             kwargs = dict(model=model, messages=messages,
                           temperature=temperature, max_tokens=max_tokens)
             if reasoning_effort:
-                kwargs["reasoning_effort"] = reasoning_effort
+                # OpenRouter przyjmuje to natywnie w body (LiteLLM nie mapuje
+                # reasoning_effort dla providerów openrouter/*)
+                kwargs["extra_body"] = {"reasoning": {"effort": reasoning_effort}}
             resp = await litellm.acompletion(**kwargs)
             text = resp.choices[0].message.content or ""
             if not text.strip():
