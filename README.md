@@ -87,6 +87,4 @@ Konfiguracja (jednorazowo):
 2. Settings → Pages → Source: *Deploy from a branch* → `main` / `/docs`
 3. Fine-grained PAT: https://github.com/settings/personal-access-tokens/new
 
-Szczegóły planu implementacji: `implementation_plan.md`. Profil modeli: szybki
-GLM flash (`z-ai/glm-4.5-flash`) — głębszą debatę włączysz w `config.yaml`
-(zakomentowany slot `strong`).
+Dwa profile konfiguracji:`n- ``config.yaml`` — pełne mapowanie modeli per rola (sonnet-5 / glm-5.3 / gpt-5.1 /`n  gpt-5-mini) — domyślny, zgodny z ``plan-idea-orch.md`` §6 (~$0.09/debatę),`n- ``config.flash.yaml`` — profil FLASH: wszystkie role na ``z-ai/glm-5.3-flash```n  (szybko, ~$0.02/debatę). GitHub Action ``run-boardroom`` używa właśnie tego`n  profilu (``--config config.flash.yaml``).`n`nSzczegóły planu implementacji: ``implementation_plan.md``.
