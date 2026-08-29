@@ -5,29 +5,29 @@ session:
   max_tokens: 2000
 
 models:
-  glm:    "openrouter/z-ai/glm-5.3"               # tańszy model — rola Sceptyka
-  strong: "openrouter/anthropic/claude-sonnet-5"  # Moderator / Sędzia / Architekt
-  vision: "openrouter/openai/gpt-5.1"             # Visioner
-  mid:    "openrouter/openai/gpt-5-mini"          # Analityk
+  # szybki profil (frontend GitHub Pages): wszystkie role na GLM flash
+  flash:  "openrouter/z-ai/glm-4.5-flash"
+  # opcja "glebszej" debaty — odkomentuj i przestaw role na strong:
+  # strong: "openrouter/anthropic/claude-sonnet-4.5"
 
 agents:
   architect:
-    model: strong
+    model: flash
     role_file: roles/architect.md
   sceptic:
-    model: glm
+    model: flash
     role_file: roles/sceptic.md
   visionary:
-    model: vision
+    model: flash
     role_file: roles/visionary.md
   analyst:
-    model: mid
+    model: flash
     role_file: roles/analyst.md
   moderator:
-    model: strong
+    model: flash
     role_file: roles/moderator.md
   judge:
-    model: strong
+    model: flash
     role_file: roles/judge.md
 
 # agenci biorący udział w rundach opinii (kolejność = kolejność wstrzykiwania)

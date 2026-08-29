@@ -1,0 +1,39 @@
+name: run-boardroom
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Slug sesji — pomysł zostanie odczytany z queue/<slug>.md"
+        required: true
+
+jobs:
+  boardroom:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run boardroom
+        env:
+          SLUG: ${{ inputs.slug }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python orchestrator.py --idea "queue/$SLUG.md" --name "$SLUG"
+
+      - name: Commit results
+        env:
+          SLUG: ${{ inputs.slug }}
+        run: |
+          git config user.name "boardroom-bot"
+          git config user.email "actions@github.com"
+          git add -f "sessions/$SLUG" || true
+          git commit -m "Boardroom: wynik debaty dla '$SLUG'" || echo "nothing to commit"
+          git push

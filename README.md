@@ -73,3 +73,20 @@ Modele są ustawione przez OpenRouter (prefix `openrouter/...`, jeden klucz API)
 Dostępne slug-i sprawdzisz na: https://openrouter.ai/models — wystarczy podmienić
 string w `config.yaml`. Pełna lista providerów LiteLLM:
 https://docs.litellm.ai/docs/providers
+
+## Frontend na GitHub Pages
+
+`docs/` zawiera statyczny UI: wpisz pomysł (tekst lub plik .md), wklej fine-grained
+PAT (Contents RW + Actions W na to repo; trzymany w sessionStorage), kliknij
+**Uruchom debatę** — frontend zapisze `queue/<slug>.md`, odpali workflow
+`run-boardroom` (GitHub Action z Secret `OPENROUTER_API_KEY`) i wyświetli
+`concept.md` z werdyktem GO/NO-GO/PIVOT.
+
+Konfiguracja (jednorazowo):
+1. Settings → Secrets and variables → Actions → `OPENROUTER_API_KEY`
+2. Settings → Pages → Source: *Deploy from a branch* → `main` / `/docs`
+3. Fine-grained PAT: https://github.com/settings/personal-access-tokens/new
+
+Szczegóły planu implementacji: `implementation_plan.md`. Profil modeli: szybki
+GLM flash (`z-ai/glm-4.5-flash`) — głębszą debatę włączysz w `config.yaml`
+(zakomentowany slot `strong`).
