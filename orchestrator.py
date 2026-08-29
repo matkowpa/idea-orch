@@ -236,6 +236,10 @@ def main() -> None:
     result = asyncio.run(Boardroom(session_dir, cfg).run())
     import cost_report
     cost_report.report(session_dir)
+    # dopisz raport kosztow na koncu concept.md
+    cost_text, _ = cost_report.build_report(session_dir)
+    concept = result.read_text(encoding="utf-8")
+    result.write_text(concept.rstrip() + "\n\n---\n\n" + cost_text, encoding="utf-8")
     print(f"\nGotowe. Wynik: {result}")
 
 
