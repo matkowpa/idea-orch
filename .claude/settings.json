@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:openrouter.ai)",
+      "WebSearch",
+      "Bash(python -c \"import litellm; print\\(litellm.__version__\\)\")",
+      "Bash(pip show *)"
+    ]
+  }
+}

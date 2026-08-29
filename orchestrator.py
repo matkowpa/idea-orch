@@ -230,6 +230,8 @@ def main() -> None:
 
     print(f"Boardroom start | sesja: {args.name}")
     result = asyncio.run(Boardroom(session_dir, cfg).run())
+    import cost_report
+    cost_report.report(session_dir)
     print(f"\nGotowe. Wynik: {result}")
 
 
