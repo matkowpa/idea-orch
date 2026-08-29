@@ -47,7 +47,14 @@ async function pollResult(slug, onTick) {
   const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/sessions/${slug}/concept.md`;
   const deadline = Date.now() + 10 * 60 * 1000; // 10 min
   while (Date.now() < deadline) {
-    onTick();
+    // postep debaty (jesli orchestrator juz zaczal)
+    try {
+      const pr = await fetch(`https://raw.githubusercontent.com/${REPO}/${BRANCH}/sessions/${slug}/_progress.json?t=` + Date.now());
+      if (pr.ok) {
+        const j = await pr.json();
+        onTick(`Etap ${j.step}/${j.total}: ${j.stage}${j.detail ? " — " + j.detail : ""}`);
+      }
+    } catch (e) { /* progres niedostepny — pomijamy */ }
     const r = await fetch(url + "?t=" + Date.now());
     if (r.ok) return await r.text();
     await new Promise((res) => setTimeout(res, 10000));
@@ -79,7 +86,7 @@ $("run").addEventListener("click", async () => {
     await putFile("queue/" + slug + ".md", idea, "Pomysł: " + slug, pat);
     setStatus("Uruchamiam workflow ...");
     await dispatchRun(slug, pat);
-    setStatus("Debata trwa (GLM flash, ~1–2 min). Odpytuję co 10 s ...");
+    setStatus("Debata trwa — odpytuję o postęp co 10 s ...");
     const md = await pollResult(slug, () => setStatus("Debata trwa ... odpytuję co 10 s"));
     $("result").innerHTML = marked.parse(md);
     $("artifacts-link").innerHTML =

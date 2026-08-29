@@ -44,7 +44,7 @@ sessions/moj-pomysl/
 ├── round2/...             # kolejna runda (agenci widzą się nawzajem)
 ├── concept.md             # FINALNA KONCEPCJA + werdykt + raport kosztów na końcu
 ├── cost_report.md         # ten sam raport kosztów jako osobny plik
-└── run.log                # log wywołań: model, tokeny, czas, błędy (JSONL)
+├── _progress.json         # bieżący postęp debaty (podglądany przez frontend)\n└── run.log                # log wywołań: model, tokeny, czas, błędy (JSONL)
 ```
 
 Raport kosztów na końcu `concept.md` liczy koszt per model z realnych liczb

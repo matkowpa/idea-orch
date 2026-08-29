@@ -111,6 +111,16 @@ class Boardroom:
     def prompt(self, name: str) -> str:
         return read_text(BASE_DIR / "prompts" / name)
 
+    def _progress(self, stage: str, detail: str = "") -> None:
+        """Zapisz postep debaty do _progress.json (polling frontendu)."""
+        total = 1 + self.cfg["session"]["rounds"] * (len(self.cfg["discussing_agents"]) + 1) + 1
+        self._step = getattr(self, "_step", 0) + 1
+        write_text(self.dir / "_progress.json", json.dumps({
+            "ts": datetime.datetime.now().isoformat(timespec="seconds"),
+            "step": min(self._step, total), "total": total,
+            "stage": stage, "detail": detail,
+        }, ensure_ascii=False))
+
     async def ask(self, agent: str, user: str) -> str:
         return await call_model(
             model=self.model_of(agent),
@@ -126,6 +136,7 @@ class Boardroom:
         user = render(self.prompt("01_agenda.md"), IDEA=self.idea)
         agenda = await self.ask("architect", user)
         write_text(self.dir / "01_agenda.md", agenda)
+        self._progress("agenda", "gotowa")
         print("[1/4] Agenda gotowa -> 01_agenda.md")
         return agenda
 
@@ -155,14 +166,19 @@ class Boardroom:
         context = self._context_block(round_no)
         and_debate = "" if round_no == 1 else " oraz na sporne kwestie z poprzedniej rundy"
         template = self.prompt("02_round_opinion.md")
-        tasks = {}
-        for agent in self.cfg["discussing_agents"]:
-            user = render(template, ROUND=str(round_no), IDEA=self.idea,
-                          AGENDA=agenda, CONTEXT=context, AND_DEBATE=and_debate)
-            tasks[agent] = asyncio.create_task(self.ask(agent, user))
-        results = {a: await t for a, t in tasks.items()}
-        for agent, text in results.items():
-            write_text(self.dir / f"round{round_no}" / f"{agent}.md", text)
+        user = render(template, ROUND=str(round_no), IDEA=self.idea,
+                      AGENDA=agenda, CONTEXT=context, AND_DEBATE=and_debate)
+        agents = list(self.cfg["discussing_agents"])
+        results = {}
+        pending = {asyncio.create_task(self.ask(a, user), name=a) for a in agents}
+        while pending:
+            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+            for t in done:
+                agent = t.get_name()
+                results[agent] = t.result()
+                write_text(self.dir / f"round{round_no}" / f"{agent}.md", results[agent])
+                self._progress(f"runda {round_no}",
+                               f"opinia: {agent} ({len(results)}/{len(agents)})")
         print(f"[2/4] Runda {round_no}: opinie agentów zapisane.")
         return results
 
@@ -176,6 +192,8 @@ class Boardroom:
         write_text(self.dir / f"round{round_no}" / "_synthesis.md", synthesis)
         m = STATUS_RE.search(synthesis)
         converged = bool(m) and m.group(1).upper() == "CONVERGED"
+        self._progress(f"runda {round_no}",
+                       f"synteza ({'CONVERGED' if converged else 'CONTINUE'})")
         print(f"[3/4] Synteza rundy {round_no} "
               f"({'CONVERGED' if converged else 'CONTINUE'}).")
         return converged
@@ -196,6 +214,7 @@ class Boardroom:
                       TRANSCRIPT="\n".join(parts))
         concept = await self.ask("judge", user)
         write_text(self.dir / "concept.md", concept)
+        self._progress("sedzia", "koncepcja finalna")
         print(f"[4/4] Finalna koncepcja -> concept.md")
         return self.dir / "concept.md"
 
@@ -210,6 +229,7 @@ class Boardroom:
                 break
         result = await self.final_concept(rounds_done)
         self.log.close()
+        self._progress("gotowe", "concept.md zapisany")
         return result
 
 
